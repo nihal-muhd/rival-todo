@@ -1,5 +1,7 @@
 # Task Management Application
 
+![alt text](image.png)
+
 A full-stack task management application built as part of a Full-Stack Developer assessment.
 
 The project is structured as a monorepo with a separate frontend and backend.

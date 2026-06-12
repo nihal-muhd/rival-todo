@@ -28,6 +28,7 @@ backend/prisma/migrations/dev.db
 backend/prisma/dev.db
 
 *.agents
+memory.md
 
 # Logs
 logs/

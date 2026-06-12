@@ -7,8 +7,8 @@ Update this file after every completed feature. Any AI agent reading this should
 ## Current Status
 
 **Phase:** Phase 1 — Foundation  
-**Last completed:** Not started  
-**Next:** 01 Homepage
+**Last completed:** 01 Homepage  
+**Next:** 02 Auth Pages
 
 ---
 
@@ -16,7 +16,7 @@ Update this file after every completed feature. Any AI agent reading this should
 
 ### Phase 1 — Foundation
 
-- [ ] 01 Homepage
+- [x] 01 Homepage
 - [ ] 02 Auth Pages
 - [ ] 03 Route Protection
 - [ ] 04 Database Schema
@@ -57,7 +57,7 @@ Update this file after every completed feature. Any AI agent reading this should
 
 ### 01 Homepage
 
-**Status:** Not started
+**Status:** Completed
 
 **Expected UI:**
 
@@ -629,11 +629,15 @@ Example note format:
 - Feature 01: Homepage UI completed. Verified `/` loads on desktop and mobile widths. CTA redirects still pending auth implementation.
 ```
 
+- Feature 01: Homepage completed in `frontend/app/page.tsx` using the provided `frontend/public/today.png` preview image. Root layout restored in `frontend/app/layout.tsx` with Inter and project metadata.
+- Feature 01 verification: `npm.cmd run lint` passes. `http://localhost:3000/` returns 200 from the already-running dev server.
+- Feature 01 verification note: `npm.cmd run build` is blocked before compilation by `EPERM: operation not permitted, unlink 'frontend/.next/trace'`, likely because an existing Node/Next process has the trace file open.
+
 ---
 
 ## Known Issues
 
-No known issues yet.
+- `npm.cmd run build` cannot complete while `frontend/.next/trace` is locked by an existing process. Stop the running Next/Node dev process or clear the locked `.next` artifact, then rerun the build.
 
 ---
 
