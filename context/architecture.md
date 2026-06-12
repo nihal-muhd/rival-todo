@@ -151,13 +151,9 @@ No dedicated frontend routes are planned for `/tasks/new`, `/tasks/[id]`, or `/t
 │   ├── prisma/
 │   │   ├── schema.prisma
 │   │   └── migrations/
-│   │
+│   ├── .env
 │   ├── src/
 │   │   ├── server.ts                    # Starts Express server
-│   │   ├── app.ts                       # Express app setup
-│   │   │
-│   │   ├── config/
-│   │   │   └── env.ts                   # Environment validation
 │   │   │
 │   │   ├── modules/
 │   │   │   ├── auth/
