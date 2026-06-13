@@ -7,9 +7,9 @@ Update this file after every completed feature. Any AI agent reading this should
 ## Current Status
 
 **Phase:** Phase 1 — Foundation  
-**Last completed:** 01 Homepage  
-**In progress:** 02 Auth Pages — signup and login flows connected
-**Next:** Complete logout, current-user restoration, and route protection
+**Last completed:** 07 Inbox Page — mock task interactions complete  
+**In progress:** 09 Task Modals — create/edit form complete; detail modal pending
+**Next:** Return to current-user restoration and route protection
 
 ---
 
@@ -26,7 +26,7 @@ Update this file after every completed feature. Any AI agent reading this should
 ### Phase 2 — Inbox and Today
 
 - [ ] 06 Protected App Layout
-- [ ] 07 Inbox Page — UI with mock data
+- [x] 07 Inbox Page — UI with mock data
 - [ ] 08 Today Page — UI with mock data
 - [ ] 09 Task Modals
 
@@ -228,7 +228,7 @@ Update this file after every completed feature. Any AI agent reading this should
 
 ### 06 Protected App Layout
 
-**Status:** Not started
+**Status:** In progress — responsive sidebar shell complete
 
 **Expected UI:**
 
@@ -257,7 +257,7 @@ Update this file after every completed feature. Any AI agent reading this should
 
 ### 07 Inbox Page — UI with Mock Data
 
-**Status:** Not started
+**Status:** Completed — approved focused scope with five mock tasks
 
 **Expected Route:**
 
@@ -319,7 +319,7 @@ Update this file after every completed feature. Any AI agent reading this should
 
 ### 09 Task Modals
 
-**Status:** Not started
+**Status:** In progress — create/edit task modal complete; detail modal pending
 
 **Expected Components:**
 
@@ -645,6 +645,15 @@ Example note format:
 - Feature 01: Homepage completed in `frontend/app/page.tsx` using the provided `frontend/public/today.png` preview image. Root layout restored in `frontend/app/layout.tsx` with Inter and project metadata.
 - Feature 01 verification: `npm.cmd run lint` passes. `http://localhost:3000/` returns 200 from the already-running dev server.
 - Feature 01 verification note: `npm.cmd run build` is blocked before compilation by `EPERM: operation not permitted, unlink 'frontend/.next/trace'`, likely because an existing Node/Next process has the trace file open.
+- Feature 06: Added the responsive protected layout sidebar from `context/designs/sidebar.png`. Inbox, Today, and Calendar are active links; the remaining sidebar controls and project rows are visual-only placeholders.
+- Feature 06: Added HugeIcons dependencies and used the approved icon library throughout the sidebar. User identity and counts remain mock data until current-user and task API wiring are completed.
+- Build-order decision: Sidebar and Inbox UI work may proceed before Feature 03 route protection. Auth restoration and `frontend/proxy.ts` remain required immediately afterward.
+- Feature 06 verification: frontend lint and TypeScript checks pass. The running development server returns `200` for `/inbox` and renders the sidebar shell.
+- Feature 06 build verification: `npm.cmd run build` remains blocked before compilation by the existing `frontend/.next/trace` file lock.
+- Feature 07: Built the Inbox task list from `context/designs/inbox (2).png` with five mock active tasks. Edit appears on hover/focus, completing a task removes it from Inbox, and an empty state appears after all tasks are completed.
+- Feature 07: Added local protected-layout task state so the sidebar and Inbox Add task actions open the same modal. Added tasks and edits update the list immediately without API calls or persistence.
+- Feature 09 partial: Built the create/edit task modal from `context/designs/add-modal.png` with only title, description, date, priority, Cancel, and Add task/Save changes actions. Title validation uses the shared frontend Zod schema.
+- Feature 07/09 verification: frontend lint and TypeScript checks pass, and the running development server returns `200` for `/inbox`.
 
 ---
 

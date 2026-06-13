@@ -44,3 +44,63 @@ Auth pages use a split layout on desktop: form content centered in the left colu
 Validation and backend errors appear directly beneath the relevant control or form in compact red alert text. Submit buttons keep the established primary styling while disabled and replace their label with a clear pending action.
 
 Login and signup must share this same field-error, server-error, and pending-button treatment so authentication feedback remains visually consistent.
+
+### Protected Sidebar
+
+File: frontend/components/layout/Sidebar.tsx, frontend/app/(protected)/layout.tsx  
+Last updated: 2026-06-13
+
+| Property         | Class |
+| ---------------- | ----- |
+| Background       | `bg-[color-mix(in_oklab,var(--color-primary)_4%,white)]`; page content uses `bg-background` |
+| Border           | `border-r border-border`; mobile trigger uses `border border-border` |
+| Border radius    | `rounded-lg` for navigation rows and icon buttons; `rounded-full` for the avatar |
+| Text - primary   | `text-foreground`, `text-sm font-medium`; user name uses `text-base font-semibold` |
+| Text - secondary | `text-muted-foreground`; active and action text use `text-primary` |
+| Spacing          | Sidebar uses `px-4 py-5`; rows use `h-11 gap-3 px-3`; sections use `mt-7` and `mt-8` |
+| Hover state      | `hover:bg-muted hover:text-foreground`; green actions use a soft primary color mix |
+| Shadow           | `shadow-card` on the avatar, mobile trigger, and mobile drawer |
+| Accent usage     | Active rows use `bg-[color-mix(in_oklab,var(--color-primary)_12%,white)] text-primary` |
+
+**Pattern notes:**
+Protected navigation uses a warm, very light green panel with token-based foreground and border colors. Navigation rows share a compact 44px height, 8px radius, and HugeIcons at roughly 20-22px. Only functional routes use links and active-route treatment; planned controls remain buttons without invented behavior. Desktop uses a fixed-width 280px sidebar while mobile opens the same content in an overlay drawer.
+
+### Inbox Task List
+
+File: frontend/components/tasks/InboxView.tsx  
+Last updated: 2026-06-13
+
+| Property         | Class |
+| ---------------- | ----- |
+| Background       | `bg-background`; empty state uses `bg-card` |
+| Border           | Task rows use `border-b border-border`; completion control uses `border border-muted-foreground` |
+| Border radius    | `rounded-full` for completion controls; `rounded-lg` for actions; `rounded-2xl` for empty state |
+| Text - primary   | Page title uses `text-3xl font-semibold text-foreground`; task rows use `text-base font-medium text-foreground` |
+| Text - secondary | Empty-state copy uses `text-sm text-muted-foreground` |
+| Spacing          | List begins at `mt-8`; rows use `min-h-14 gap-3 px-1`; row title uses `py-4` |
+| Hover state      | Edit action reveals with `group-hover:opacity-100`; completion control uses a soft primary tint |
+| Shadow           | `shadow-card` for the empty state; primary mobile action uses a soft green shadow |
+| Accent usage     | Add-task actions use `text-primary` or `bg-primary text-primary-foreground` |
+
+**Pattern notes:**
+Inbox tasks are quiet single-line rows separated by token borders. Completion is the first action, the title is the main edit target, and a compact Edit button appears on hover or keyboard focus on larger screens while staying visible on mobile. Completed tasks leave the active Inbox immediately.
+
+### Task Form Modal
+
+File: frontend/components/modals/TaskFormModal.tsx  
+Last updated: 2026-06-13
+
+| Property         | Class |
+| ---------------- | ----- |
+| Background       | Overlay uses `bg-foreground/20`; modal uses `bg-card` |
+| Border           | `border border-border`; footer uses `border-t border-border` |
+| Border radius    | `rounded-t-2xl` on mobile and `sm:rounded-2xl` on larger screens; fields and buttons use `rounded-lg` |
+| Text - primary   | Title input uses `text-xl font-semibold text-foreground`; labels/actions use `text-sm font-medium` or `font-semibold` |
+| Text - secondary | Placeholders use `placeholder:text-muted-foreground` |
+| Spacing          | Modal uses `p-5 sm:p-7`; fields use `mt-4`; actions use `mt-7 gap-3 pt-5` |
+| Hover state      | Secondary action uses `hover:bg-muted`; primary action uses `hover:brightness-95` |
+| Shadow           | Modal uses `shadow-[0_24px_60px_rgba(16,24,40,0.18)]`; submit uses a soft green shadow |
+| Accent usage     | Fields use primary focus borders/rings; submit uses `bg-primary text-primary-foreground` |
+
+**Pattern notes:**
+Task forms use a focused bottom sheet on mobile and centered card on larger screens. The form includes only task title, description, date, priority, Cancel, and the primary submit action. Create and edit share the same form, with field values reset whenever the modal opens.

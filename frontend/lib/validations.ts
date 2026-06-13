@@ -29,3 +29,19 @@ export const loginSchema = z.object({
 });
 
 export type LoginInput = z.input<typeof loginSchema>;
+
+export const taskFormSchema = z.object({
+  title: z
+    .string()
+    .trim()
+    .min(1, "Task title is required")
+    .max(200, "Task title must be 200 characters or fewer"),
+  description: z
+    .string()
+    .trim()
+    .max(1000, "Description must be 1000 characters or fewer"),
+  dueDate: z.string(),
+  priority: z.enum(["LOW", "MEDIUM", "HIGH"]),
+});
+
+export type TaskFormInput = z.input<typeof taskFormSchema>;
