@@ -1,21 +1,45 @@
 "use client";
 
-import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
+import { useSignup } from "@/hooks/useAuth";
+import { ApiError } from "@/lib/api";
+import { signupSchema, type SignupInput } from "@/lib/validations";
 
 export function SignupForm() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const signupMutation = useSignup();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignupInput>({
+    resolver: zodResolver(signupSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+    },
+  });
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
-    event.preventDefault();
-    setIsSubmitting(true);
+  const serverError = signupMutation.error;
+  const serverErrorMessage =
+    serverError instanceof ApiError
+      ? serverError.message
+      : serverError
+        ? "Unable to create your account. Please try again."
+        : null;
 
-    window.setTimeout(() => {
-      setIsSubmitting(false);
-    }, 600);
-  }
+  const onSubmit = handleSubmit((values) => {
+    signupMutation.mutate(values);
+  });
 
   return (
-    <form className="space-y-4 lg:space-y-3 xl:space-y-4" onSubmit={handleSubmit}>
+    <form
+      className="space-y-4 lg:space-y-3 xl:space-y-4"
+      onSubmit={onSubmit}
+      noValidate
+    >
       <div className="space-y-1">
         <label
           htmlFor="name"
@@ -45,13 +69,20 @@ export function SignupForm() {
           </svg>
           <input
             id="name"
-            name="name"
             type="text"
             autoComplete="name"
             placeholder="Enter your name..."
+            aria-invalid={Boolean(errors.name)}
+            aria-describedby={errors.name ? "name-error" : undefined}
+            {...register("name")}
             className="min-w-0 flex-1 bg-transparent text-base text-foreground outline-none placeholder:text-muted-foreground"
           />
         </div>
+        {errors.name ? (
+          <p id="name-error" className="text-sm text-red-600" role="alert">
+            {errors.name.message}
+          </p>
+        ) : null}
       </div>
 
       <div className="space-y-1">
@@ -84,13 +115,20 @@ export function SignupForm() {
           </svg>
           <input
             id="email"
-            name="email"
             type="email"
             autoComplete="email"
             placeholder="Enter your email..."
+            aria-invalid={Boolean(errors.email)}
+            aria-describedby={errors.email ? "email-error" : undefined}
+            {...register("email")}
             className="min-w-0 flex-1 bg-transparent text-base text-foreground outline-none placeholder:text-muted-foreground"
           />
         </div>
+        {errors.email ? (
+          <p id="email-error" className="text-sm text-red-600" role="alert">
+            {errors.email.message}
+          </p>
+        ) : null}
       </div>
 
       <div className="space-y-1">
@@ -129,21 +167,34 @@ export function SignupForm() {
           </svg>
           <input
             id="password"
-            name="password"
             type="password"
             autoComplete="new-password"
             placeholder="Create your password..."
+            aria-invalid={Boolean(errors.password)}
+            aria-describedby={errors.password ? "password-error" : undefined}
+            {...register("password")}
             className="min-w-0 flex-1 bg-transparent text-base text-foreground outline-none placeholder:text-muted-foreground"
           />
         </div>
+        {errors.password ? (
+          <p id="password-error" className="text-sm text-red-600" role="alert">
+            {errors.password.message}
+          </p>
+        ) : null}
       </div>
+
+      {serverErrorMessage ? (
+        <p className="text-sm text-red-600" role="alert">
+          {serverErrorMessage}
+        </p>
+      ) : null}
 
       <button
         type="submit"
-        disabled={isSubmitting}
+        disabled={signupMutation.isPending}
         className="flex min-h-16 w-full items-center justify-center rounded-lg bg-primary px-6 text-lg font-semibold text-primary-foreground shadow-[0_18px_36px_rgba(85,202,141,0.30)] transition hover:brightness-95 disabled:opacity-70 lg:min-h-14 xl:min-h-16"
       >
-        {isSubmitting ? "Creating account..." : "Create account"}
+        {signupMutation.isPending ? "Creating account..." : "Create account"}
       </button>
     </form>
   );
