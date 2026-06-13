@@ -3,119 +3,79 @@
 import {
   createContext,
   useContext,
-  useMemo,
   useState,
   type ReactNode,
 } from "react";
 
 import { TaskFormModal } from "@/components/modals/TaskFormModal";
+import {
+  useCompleteTask,
+  useCreateTask,
+  useInboxTasks,
+  useUpdateTask,
+} from "@/hooks/useTasks";
 import type { TaskFormInput } from "@/lib/validations";
-
-export type TaskPriority = "LOW" | "MEDIUM" | "HIGH";
-
-export type Task = {
-  id: string;
-  title: string;
-  description: string;
-  dueDate: string;
-  priority: TaskPriority;
-};
+import type { Task } from "@/types/tasks";
 
 type TaskWorkspaceValue = {
   tasks: Task[];
+  isLoading: boolean;
+  errorMessage: string | null;
+  actionErrorMessage: string | null;
+  retryTasks: () => void;
   openCreateTask: () => void;
   openEditTask: (task: Task) => void;
   completeTask: (taskId: string) => void;
 };
 
-const initialTasks: Task[] = [
-  {
-    id: "task-1",
-    title: "Review campaign brief",
-    description: "Check the final campaign goals and deliverables.",
-    dueDate: "",
-    priority: "MEDIUM",
-  },
-  {
-    id: "task-2",
-    title: "Reply to client email",
-    description: "Send the revised timeline and next steps.",
-    dueDate: "",
-    priority: "HIGH",
-  },
-  {
-    id: "task-3",
-    title: "Prepare Q2 performance report",
-    description: "Collect the latest metrics for the quarterly review.",
-    dueDate: "",
-    priority: "HIGH",
-  },
-  {
-    id: "task-4",
-    title: "Book flights for offsite",
-    description: "Compare the available morning flights.",
-    dueDate: "",
-    priority: "LOW",
-  },
-  {
-    id: "task-5",
-    title: "Update product roadmap",
-    description: "Add the confirmed milestones for the next release.",
-    dueDate: "",
-    priority: "MEDIUM",
-  },
-];
-
 const TaskWorkspaceContext = createContext<TaskWorkspaceValue | null>(null);
 
 export function TaskWorkspace({ children }: { children: ReactNode }) {
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
-
-  const value = useMemo<TaskWorkspaceValue>(
-    () => ({
-      tasks,
-      openCreateTask: () => {
-        setEditingTask(null);
-        setIsModalOpen(true);
-      },
-      openEditTask: (task) => {
-        setEditingTask(task);
-        setIsModalOpen(true);
-      },
-      completeTask: (taskId) => {
-        setTasks((currentTasks) =>
-          currentTasks.filter((task) => task.id !== taskId),
-        );
-      },
-    }),
-    [tasks],
-  );
+  const inboxQuery = useInboxTasks();
+  const createMutation = useCreateTask();
+  const updateMutation = useUpdateTask();
+  const completeMutation = useCompleteTask();
+  const value: TaskWorkspaceValue = {
+    tasks: inboxQuery.data?.items ?? [],
+    isLoading: inboxQuery.isPending,
+    errorMessage: inboxQuery.isError
+      ? "Could not load tasks. Please try again."
+      : null,
+    actionErrorMessage: completeMutation.isError
+      ? "Could not complete task. Please try again."
+      : null,
+    retryTasks: () => {
+      void inboxQuery.refetch();
+    },
+    openCreateTask: () => {
+      setEditingTask(null);
+      setIsModalOpen(true);
+    },
+    openEditTask: (task) => {
+      setEditingTask(task);
+      setIsModalOpen(true);
+    },
+    completeTask: (taskId) => {
+      completeMutation.mutate(taskId);
+    },
+  };
 
   function closeModal() {
     setIsModalOpen(false);
     setEditingTask(null);
   }
 
-  function saveTask(input: TaskFormInput) {
+  function saveTask(input: TaskFormInput): void {
     if (editingTask) {
-      setTasks((currentTasks) =>
-        currentTasks.map((task) =>
-          task.id === editingTask.id ? { ...task, ...input } : task,
-        ),
+      updateMutation.mutate(
+        { taskId: editingTask.id, input },
+        { onSuccess: closeModal },
       );
     } else {
-      setTasks((currentTasks) => [
-        ...currentTasks,
-        {
-          id: crypto.randomUUID(),
-          ...input,
-        },
-      ]);
+      createMutation.mutate(input, { onSuccess: closeModal });
     }
-
-    closeModal();
   }
 
   return (
@@ -126,6 +86,12 @@ export function TaskWorkspace({ children }: { children: ReactNode }) {
         task={editingTask}
         onClose={closeModal}
         onSubmit={saveTask}
+        isSubmitting={createMutation.isPending || updateMutation.isPending}
+        submitError={
+          createMutation.isError || updateMutation.isError
+            ? "Could not save task. Please check the form and retry."
+            : null
+        }
       />
     </TaskWorkspaceContext.Provider>
   );

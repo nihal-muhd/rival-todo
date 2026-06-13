@@ -6,9 +6,9 @@ Update this file after every completed feature. Any AI agent reading this should
 
 ## Current Status
 
-**Phase:** Phase 2 — Inbox and Today  
-**Last completed:** 03 Route Protection  
-**In progress:** 09 Task Modals — create/edit form complete; detail modal pending
+**Phase:** Phase 5 — Frontend API Wiring  
+**Last completed:** 12 Task API  
+**In progress:** 15 Task Data Wiring — Inbox create, edit, complete, and list connected
 **Next:** Complete the Task Detail modal
 
 ---
@@ -20,8 +20,8 @@ Update this file after every completed feature. Any AI agent reading this should
 - [x] 01 Homepage
 - [x] 02 Auth Pages
 - [x] 03 Route Protection
-- [ ] 04 Database Schema
-- [ ] 05 Backend Foundation
+- [x] 04 Database Schema
+- [x] 05 Backend Foundation
 
 ### Phase 2 — Inbox and Today
 
@@ -37,7 +37,7 @@ Update this file after every completed feature. Any AI agent reading this should
 ### Phase 4 — Backend Auth and Task API
 
 - [x] 11 Auth API
-- [ ] 12 Task API
+- [x] 12 Task API
 - [ ] 13 Search, Filter, Sort, Pagination API
 
 ### Phase 5 — Frontend API Wiring
@@ -154,7 +154,7 @@ Update this file after every completed feature. Any AI agent reading this should
 
 ### 04 Database Schema
 
-**Status:** Not started
+**Status:** Completed
 
 **Expected Schema:**
 
@@ -197,7 +197,7 @@ Update this file after every completed feature. Any AI agent reading this should
 
 ### 05 Backend Foundation
 
-**Status:** Not started
+**Status:** Completed
 
 **Expected Files:**
 
@@ -415,7 +415,7 @@ Update this file after every completed feature. Any AI agent reading this should
 
 ### 12 Task API
 
-**Status:** Not started
+**Status:** Completed
 
 **Expected Endpoints:**
 
@@ -443,7 +443,7 @@ Update this file after every completed feature. Any AI agent reading this should
 
 ### 13 Search, Filter, Sort, Pagination API
 
-**Status:** Not started
+**Status:** In progress — Inbox view and pagination foundation complete
 
 **Expected Query Params:**
 
@@ -497,7 +497,7 @@ Update this file after every completed feature. Any AI agent reading this should
 
 ### 15 Task Data Wiring
 
-**Status:** Not started
+**Status:** In progress — Inbox create, edit, complete, and list connected
 
 **Expected Logic:**
 
@@ -662,6 +662,14 @@ Example note format:
 - Feature 06: Sidebar now displays the authenticated user's name/initial and includes a working Logout button with pending state.
 - Auth verification: guest `/inbox` returned `307` to `/login`; signup returned `201`; `/auth/me` returned `200`; authenticated `/inbox` returned `200`; authenticated `/login` returned `307` to `/inbox`; logout returned `200`, removed the cookie, and `/inbox` again returned `307` to `/login`.
 - Auth checks: backend typecheck/build and frontend lint/typecheck pass. Frontend production build remains blocked by the existing `.next/trace` lock.
+- Feature 04 verification: Prisma reports the PostgreSQL schema is valid, the initial migration is applied, and the database schema is up to date.
+- Feature 05 verification: backend health, environment validation, CORS credentials, cookie parsing, request validation, centralized errors, and production TypeScript build are working.
+- Feature 12: Added protected task create, list, detail, update, and delete endpoints. Every read and mutation is scoped by both task id and authenticated `userId`; cross-user reads, updates, and deletes return `404`.
+- Feature 12: Backend Zod validation covers task writes, UUID params, and Inbox pagination query values. New tasks default to `TODO`, and due dates are persisted at UTC midnight from `YYYY-MM-DD` input.
+- Feature 13 partial: `GET /api/tasks` supports backend pagination metadata and `view=inbox`, returning only non-completed tasks ordered by newest first. Search, status/priority filters, and selectable sorting remain pending.
+- Feature 15 partial: Replaced mock Inbox state with TanStack Query. Create, edit, and complete mutations persist through the API and invalidate task queries; Inbox now has real loading, error, empty, submit-pending, and mutation-error states.
+- Task API verification: create returned `201`, list returned the owned task, edit returned `200`, completion persisted `COMPLETED` and removed the task from Inbox, unauthenticated list returned `401`, invalid input returned `400`, and cross-user get/update/delete returned `404`.
+- Task wiring checks: backend build, frontend lint, and frontend TypeScript checks pass. Frontend production build remains blocked before compilation by the existing `.next/trace` lock.
 
 ---
 

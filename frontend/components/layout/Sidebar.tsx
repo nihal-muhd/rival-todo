@@ -21,7 +21,7 @@ import {
 } from "@hugeicons/core-free-icons";
 
 import { useTaskWorkspace } from "@/components/tasks/TaskWorkspace";
-import { useCurrentUser, useLogout } from "@/hooks/useAuth";
+import { useLogout } from "@/hooks/useAuth";
 
 type NavigationItem = {
   label: string;
@@ -49,7 +49,6 @@ const projects = [
 function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
   const { openCreateTask } = useTaskWorkspace();
-  const currentUserQuery = useCurrentUser();
   const logoutMutation = useLogout();
   // const userName = currentUserQuery.data?.user.name ?? "Account";
   // const userInitial = userName.charAt(0).toUpperCase();

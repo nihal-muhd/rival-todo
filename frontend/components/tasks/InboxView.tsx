@@ -3,8 +3,16 @@
 import { useTaskWorkspace } from "@/components/tasks/TaskWorkspace";
 
 export function InboxView() {
-  const { tasks, openCreateTask, openEditTask, completeTask } =
-    useTaskWorkspace();
+  const {
+    tasks,
+    isLoading,
+    errorMessage,
+    actionErrorMessage,
+    retryTasks,
+    openCreateTask,
+    openEditTask,
+    completeTask,
+  } = useTaskWorkspace();
 
   return (
     <div className="mx-auto w-full max-w-280">
@@ -19,7 +27,33 @@ export function InboxView() {
         </button>
       </div>
 
-      {tasks.length > 0 ? (
+      {actionErrorMessage ? (
+        <p className="mt-5 text-sm text-red-600" role="alert">
+          {actionErrorMessage}
+        </p>
+      ) : null}
+
+      {isLoading ? (
+        <div className="mt-8 space-y-3" aria-label="Loading tasks">
+          {Array.from({ length: 5 }, (_, index) => (
+            <div
+              key={index}
+              className="h-14 animate-pulse rounded-lg bg-muted"
+            />
+          ))}
+        </div>
+      ) : errorMessage ? (
+        <div className="mt-10 rounded-2xl border border-border bg-card p-8 text-center shadow-card">
+          <p className="text-sm text-muted-foreground">{errorMessage}</p>
+          <button
+            type="button"
+            onClick={retryTasks}
+            className="mt-5 rounded-lg border border-border bg-background px-4 py-2 text-sm font-semibold text-foreground hover:bg-muted"
+          >
+            Try again
+          </button>
+        </div>
+      ) : tasks.length > 0 ? (
         <div className="mt-8">
           <ul>
             {tasks.map((task) => (

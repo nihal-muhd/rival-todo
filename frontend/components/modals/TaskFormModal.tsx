@@ -4,17 +4,19 @@ import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import type { Task } from "@/components/tasks/TaskWorkspace";
 import {
   taskFormSchema,
   type TaskFormInput,
 } from "@/lib/validations";
+import type { Task } from "@/types/tasks";
 
 type TaskFormModalProps = {
   isOpen: boolean;
   task: Task | null;
   onClose: () => void;
   onSubmit: (input: TaskFormInput) => void;
+  isSubmitting: boolean;
+  submitError: string | null;
 };
 
 const emptyTask: TaskFormInput = {
@@ -29,6 +31,8 @@ export function TaskFormModal({
   task,
   onClose,
   onSubmit,
+  isSubmitting,
+  submitError,
 }: TaskFormModalProps) {
   const {
     register,
@@ -162,18 +166,29 @@ export function TaskFormModal({
         </div>
 
         <div className="mt-7 flex justify-end gap-3 border-t border-border pt-5">
+          {submitError ? (
+            <p className="mr-auto self-center text-sm text-red-600" role="alert">
+              {submitError}
+            </p>
+          ) : null}
           <button
             type="button"
             onClick={onClose}
+            disabled={isSubmitting}
             className="rounded-lg border border-border bg-background px-5 py-2.5 text-sm font-semibold text-foreground hover:bg-muted"
           >
             Cancel
           </button>
           <button
             type="submit"
+            disabled={isSubmitting}
             className="rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-[0_12px_24px_rgba(85,202,141,0.24)] hover:brightness-95"
           >
-            {task ? "Save changes" : "Add task"}
+            {isSubmitting
+              ? "Saving..."
+              : task
+                ? "Save changes"
+                : "Add task"}
           </button>
         </div>
       </form>

@@ -83,7 +83,7 @@ Last updated: 2026-06-13
 | Accent usage     | Add-task actions use `text-primary` or `bg-primary text-primary-foreground` |
 
 **Pattern notes:**
-Inbox tasks are quiet single-line rows separated by token borders. Completion is the first action, the title is the main edit target, and a compact Edit button appears on hover or keyboard focus on larger screens while staying visible on mobile. Completed tasks leave the active Inbox immediately.
+Inbox tasks are quiet single-line rows separated by token borders. Completion is the first action, the title is the main edit target, and a compact Edit button appears on hover or keyboard focus on larger screens while staying visible on mobile. Completed tasks leave the active Inbox after the persisted mutation succeeds. Initial loading uses five muted 56px skeleton rows. Fetch and mutation failures use compact human-readable text with a bordered secondary retry action where relevant.
 
 ### Task Form Modal
 
@@ -103,4 +103,4 @@ Last updated: 2026-06-13
 | Accent usage     | Fields use primary focus borders/rings; submit uses `bg-primary text-primary-foreground` |
 
 **Pattern notes:**
-Task forms use a focused bottom sheet on mobile and centered card on larger screens. The form includes only task title, description, date, priority, Cancel, and the primary submit action. Create and edit share the same form, with field values reset whenever the modal opens.
+Task forms use a focused bottom sheet on mobile and centered card on larger screens. The form includes only task title, description, date, priority, Cancel, and the primary submit action. Create and edit share the same form, with field values reset whenever the modal opens. Persisted submissions disable both actions, replace the primary label with `Saving...`, keep the modal open on failure, and show a compact error beside the actions.

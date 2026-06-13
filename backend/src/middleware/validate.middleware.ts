@@ -21,3 +21,39 @@ export function validateBody(schema: z.ZodType): RequestHandler {
     next();
   };
 }
+
+export function validateQuery(schema: z.ZodType): RequestHandler {
+  return (request, _response, next) => {
+    const result = schema.safeParse(request.query);
+
+    if (!result.success) {
+      const errors = result.error.issues.map((issue) => ({
+        field: issue.path.join("."),
+        message: issue.message,
+      }));
+
+      next(new AppError("Validation failed", 400, errors));
+      return;
+    }
+
+    next();
+  };
+}
+
+export function validateParams(schema: z.ZodType): RequestHandler {
+  return (request, _response, next) => {
+    const result = schema.safeParse(request.params);
+
+    if (!result.success) {
+      const errors = result.error.issues.map((issue) => ({
+        field: issue.path.join("."),
+        message: issue.message,
+      }));
+
+      next(new AppError("Validation failed", 400, errors));
+      return;
+    }
+
+    next();
+  };
+}
