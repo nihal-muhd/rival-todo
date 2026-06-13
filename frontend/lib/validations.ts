@@ -18,3 +18,14 @@ export const signupSchema = z.object({
 });
 
 export type SignupInput = z.input<typeof signupSchema>;
+
+export const loginSchema = z.object({
+  email: z
+    .string()
+    .trim()
+    .email("Enter a valid email address")
+    .transform((email) => email.toLowerCase()),
+  password: z.string().min(1, "Password is required"),
+});
+
+export type LoginInput = z.input<typeof loginSchema>;

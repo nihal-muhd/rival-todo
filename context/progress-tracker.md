@@ -8,8 +8,8 @@ Update this file after every completed feature. Any AI agent reading this should
 
 **Phase:** Phase 1 — Foundation  
 **Last completed:** 01 Homepage  
-**In progress:** 02 Auth Pages — signup UI and backend flow connected  
-**Next:** Complete login and remaining auth endpoints
+**In progress:** 02 Auth Pages — signup and login flows connected
+**Next:** Complete logout, current-user restoration, and route protection
 
 ---
 
@@ -116,10 +116,13 @@ Update this file after every completed feature. Any AI agent reading this should
 
 - Signup form uses React Hook Form with the shared frontend Zod schema.
 - Signup calls `POST /api/auth/signup` through `frontend/lib/api.ts` with `credentials: "include"`.
+- Login calls `POST /api/auth/login` through the same cookie-aware API layer.
 - TanStack Query owns the signup mutation and redirects successful requests to `/inbox`.
+- TanStack Query owns the login mutation and redirects successful requests to `/inbox`.
 - Field validation, pending state, and readable backend errors are connected.
 - Live verification returned `201`, created a user, and stored the auth cookie.
-- Login, logout, current-user restoration, route protection, and the `/inbox` page remain pending.
+- Live login verification returned `200` and stored the auth cookie; invalid credentials return a generic `401`.
+- Logout, current-user restoration, route protection, and the `/inbox` page remain pending.
 
 ---
 
@@ -380,7 +383,7 @@ Update this file after every completed feature. Any AI agent reading this should
 
 ### 11 Auth API
 
-**Status:** Not started
+**Status:** In progress — signup and login endpoints complete
 
 **Expected Endpoints:**
 
@@ -471,7 +474,7 @@ Update this file after every completed feature. Any AI agent reading this should
 
 ### 14 Auth UI Wiring
 
-**Status:** In progress — signup wiring complete; remaining auth wiring pending
+**Status:** In progress — signup and login wiring complete; remaining auth wiring pending
 
 **Expected Logic:**
 

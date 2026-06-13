@@ -3,7 +3,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
-import { signupUser } from "@/lib/auth";
+import { loginUser, signupUser } from "@/lib/auth";
 
 export const authKeys = {
   all: ["auth"] as const,
@@ -16,6 +16,19 @@ export function useSignup() {
 
   return useMutation({
     mutationFn: signupUser,
+    onSuccess: ({ user }) => {
+      queryClient.setQueryData(authKeys.currentUser, user);
+      router.push("/inbox");
+    },
+  });
+}
+
+export function useLogin() {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: loginUser,
     onSuccess: ({ user }) => {
       queryClient.setQueryData(authKeys.currentUser, user);
       router.push("/inbox");

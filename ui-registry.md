@@ -42,3 +42,5 @@ Last updated: 2026-06-13
 Auth pages use a split layout on desktop: form content centered in the left column and a rounded image preview panel on the right. Desktop auth pages should use `lg:h-screen lg:min-h-0 lg:overflow-hidden` on the page shell to avoid scrolling; mobile should keep normal document flow. Inputs are large, token-based, and use icon-leading rows with `focus-within:border-primary focus-within:ring-1 focus-within:ring-primary`. Login and signup should reuse the same `AuthCard` shell. Signup uses the compact auth density plus `lg:min-h-14 xl:min-h-16` form controls so its extra field does not clip the logo or footer on desktop.
 
 Validation and backend errors appear directly beneath the relevant control or form in compact red alert text. Submit buttons keep the established primary styling while disabled and replace their label with a clear pending action.
+
+Login and signup must share this same field-error, server-error, and pending-button treatment so authentication feedback remains visually consistent.

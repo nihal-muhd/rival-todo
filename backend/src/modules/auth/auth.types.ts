@@ -1,8 +1,9 @@
 import type { z } from "zod";
 
-import type { signupSchema } from "./auth.validation";
+import type { loginSchema, signupSchema } from "./auth.validation";
 
 export type SignupInput = z.infer<typeof signupSchema>;
+export type LoginInput = z.infer<typeof loginSchema>;
 
 export type AuthUser = {
   id: string;

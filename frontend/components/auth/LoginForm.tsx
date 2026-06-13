@@ -1,22 +1,41 @@
 "use client";
 
-import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+
+import { useLogin } from "@/hooks/useAuth";
+import { ApiError } from "@/lib/api";
+import { loginSchema, type LoginInput } from "@/lib/validations";
 
 export function LoginForm() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const loginMutation = useLogin();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginInput>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
-    event.preventDefault();
-    setIsSubmitting(true);
+  const serverError = loginMutation.error;
+  const serverErrorMessage =
+    serverError instanceof ApiError
+      ? serverError.message
+      : serverError
+        ? "Unable to sign in. Please try again."
+        : null;
 
-    window.setTimeout(() => {
-      setIsSubmitting(false);
-    }, 600);
-  }
+  const onSubmit = handleSubmit((values) => {
+    loginMutation.mutate(values);
+  });
 
   return (
-    <form className="space-y-6" onSubmit={handleSubmit}>
+    <form className="space-y-6" onSubmit={onSubmit} noValidate>
       <div className="space-y-3">
         <label
           htmlFor="email"
@@ -47,13 +66,20 @@ export function LoginForm() {
           </svg>
           <input
             id="email"
-            name="email"
             type="email"
             autoComplete="email"
             placeholder="Enter your email..."
+            aria-invalid={Boolean(errors.email)}
+            aria-describedby={errors.email ? "email-error" : undefined}
+            {...register("email")}
             className="min-w-0 flex-1 bg-transparent text-base text-foreground outline-none placeholder:text-muted-foreground"
           />
         </div>
+        {errors.email ? (
+          <p id="email-error" className="text-sm text-red-600" role="alert">
+            {errors.email.message}
+          </p>
+        ) : null}
       </div>
 
       <div className="space-y-3">
@@ -92,13 +118,20 @@ export function LoginForm() {
           </svg>
           <input
             id="password"
-            name="password"
             type="password"
             autoComplete="current-password"
             placeholder="Enter your password..."
+            aria-invalid={Boolean(errors.password)}
+            aria-describedby={errors.password ? "password-error" : undefined}
+            {...register("password")}
             className="min-w-0 flex-1 bg-transparent text-base text-foreground outline-none placeholder:text-muted-foreground"
           />
         </div>
+        {errors.password ? (
+          <p id="password-error" className="text-sm text-red-600" role="alert">
+            {errors.password.message}
+          </p>
+        ) : null}
       </div>
 
       <div className="flex items-center justify-between gap-4 text-base">
@@ -110,12 +143,18 @@ export function LoginForm() {
         </Link>
       </div>
 
+      {serverErrorMessage ? (
+        <p className="text-sm text-red-600" role="alert">
+          {serverErrorMessage}
+        </p>
+      ) : null}
+
       <button
         type="submit"
-        disabled={isSubmitting}
+        disabled={loginMutation.isPending}
         className="flex min-h-16 w-full items-center justify-center rounded-lg bg-primary px-6 text-lg font-semibold text-primary-foreground shadow-[0_18px_36px_rgba(85,202,141,0.30)] transition hover:brightness-95 disabled:opacity-70"
       >
-        {isSubmitting ? "Signing in..." : "Sign in"}
+        {loginMutation.isPending ? "Signing in..." : "Sign in"}
       </button>
     </form>
   );
