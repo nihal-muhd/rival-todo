@@ -16,6 +16,10 @@ type LoginResponse = {
   user: AuthUser;
 };
 
+type CurrentUserResponse = {
+  user: AuthUser;
+};
+
 export function signupUser(input: SignupInput): Promise<SignupResponse> {
   return apiRequest<SignupResponse>("/auth/signup", {
     method: "POST",
@@ -28,4 +32,14 @@ export function loginUser(input: LoginInput): Promise<LoginResponse> {
     method: "POST",
     body: JSON.stringify(input),
   });
+}
+
+export function logoutUser(): Promise<Record<string, never>> {
+  return apiRequest<Record<string, never>>("/auth/logout", {
+    method: "POST",
+  });
+}
+
+export function getCurrentUser(): Promise<CurrentUserResponse> {
+  return apiRequest<CurrentUserResponse>("/auth/me");
 }

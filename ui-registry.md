@@ -60,10 +60,10 @@ Last updated: 2026-06-13
 | Spacing          | Sidebar uses `px-4 py-5`; rows use `h-11 gap-3 px-3`; sections use `mt-7` and `mt-8` |
 | Hover state      | `hover:bg-muted hover:text-foreground`; green actions use a soft primary color mix |
 | Shadow           | `shadow-card` on the avatar, mobile trigger, and mobile drawer |
-| Accent usage     | Active rows use `bg-[color-mix(in_oklab,var(--color-primary)_12%,white)] text-primary` |
+| Accent usage     | Active rows use `bg-[color-mix(in_oklab,var(--color-primary)_12%,white)] text-primary`; logout uses `text-destructive` |
 
 **Pattern notes:**
-Protected navigation uses a warm, very light green panel with token-based foreground and border colors. Navigation rows share a compact 44px height, 8px radius, and HugeIcons at roughly 20-22px. Only functional routes use links and active-route treatment; planned controls remain buttons without invented behavior. Desktop uses a fixed-width 280px sidebar while mobile opens the same content in an overlay drawer.
+Protected navigation uses a warm, very light green panel with token-based foreground and border colors. Navigation rows share a compact 44px height, 8px radius, and HugeIcons at roughly 20-22px. Only functional routes use links and active-route treatment; planned controls remain buttons without invented behavior. Desktop uses a fixed-width 280px sidebar while mobile opens the same content in an overlay drawer. The account header uses the restored user's name and initial. Logout sits with the lower utility actions, uses destructive text without a filled destructive background, and exposes a disabled pending state.
 
 ### Inbox Task List
 

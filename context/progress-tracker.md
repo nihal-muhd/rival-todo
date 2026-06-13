@@ -6,10 +6,10 @@ Update this file after every completed feature. Any AI agent reading this should
 
 ## Current Status
 
-**Phase:** Phase 1 — Foundation  
-**Last completed:** 07 Inbox Page — mock task interactions complete  
+**Phase:** Phase 2 — Inbox and Today  
+**Last completed:** 03 Route Protection  
 **In progress:** 09 Task Modals — create/edit form complete; detail modal pending
-**Next:** Return to current-user restoration and route protection
+**Next:** Complete the Task Detail modal
 
 ---
 
@@ -18,14 +18,14 @@ Update this file after every completed feature. Any AI agent reading this should
 ### Phase 1 — Foundation
 
 - [x] 01 Homepage
-- [ ] 02 Auth Pages
-- [ ] 03 Route Protection
+- [x] 02 Auth Pages
+- [x] 03 Route Protection
 - [ ] 04 Database Schema
 - [ ] 05 Backend Foundation
 
 ### Phase 2 — Inbox and Today
 
-- [ ] 06 Protected App Layout
+- [x] 06 Protected App Layout
 - [x] 07 Inbox Page — UI with mock data
 - [ ] 08 Today Page — UI with mock data
 - [ ] 09 Task Modals
@@ -36,13 +36,13 @@ Update this file after every completed feature. Any AI agent reading this should
 
 ### Phase 4 — Backend Auth and Task API
 
-- [ ] 11 Auth API
+- [x] 11 Auth API
 - [ ] 12 Task API
 - [ ] 13 Search, Filter, Sort, Pagination API
 
 ### Phase 5 — Frontend API Wiring
 
-- [ ] 14 Auth UI Wiring
+- [x] 14 Auth UI Wiring
 - [ ] 15 Task Data Wiring
 - [ ] 16 Search, Filter, Sort, Pagination Wiring
 
@@ -85,7 +85,7 @@ Update this file after every completed feature. Any AI agent reading this should
 
 ### 02 Auth Pages
 
-**Status:** In progress
+**Status:** Completed
 
 **Expected UI:**
 
@@ -122,13 +122,15 @@ Update this file after every completed feature. Any AI agent reading this should
 - Field validation, pending state, and readable backend errors are connected.
 - Live verification returned `201`, created a user, and stored the auth cookie.
 - Live login verification returned `200` and stored the auth cookie; invalid credentials return a generic `401`.
-- Logout, current-user restoration, route protection, and the `/inbox` page remain pending.
+- Logout clears the HTTP-only cookie and redirects to `/login`.
+- Current-user restoration uses `GET /api/auth/me` through TanStack Query.
+- The protected layout waits for session restoration before rendering authenticated UI.
 
 ---
 
 ### 03 Route Protection
 
-**Status:** Not started
+**Status:** Completed
 
 **Expected Files:**
 
@@ -228,7 +230,7 @@ Update this file after every completed feature. Any AI agent reading this should
 
 ### 06 Protected App Layout
 
-**Status:** In progress — responsive sidebar shell complete
+**Status:** Completed
 
 **Expected UI:**
 
@@ -383,7 +385,7 @@ Update this file after every completed feature. Any AI agent reading this should
 
 ### 11 Auth API
 
-**Status:** In progress — signup and login endpoints complete
+**Status:** Completed
 
 **Expected Endpoints:**
 
@@ -474,7 +476,7 @@ Update this file after every completed feature. Any AI agent reading this should
 
 ### 14 Auth UI Wiring
 
-**Status:** In progress — signup and login wiring complete; remaining auth wiring pending
+**Status:** Completed
 
 **Expected Logic:**
 
@@ -654,6 +656,12 @@ Example note format:
 - Feature 07: Added local protected-layout task state so the sidebar and Inbox Add task actions open the same modal. Added tasks and edits update the list immediately without API calls or persistence.
 - Feature 09 partial: Built the create/edit task modal from `context/designs/add-modal.png` with only title, description, date, priority, Cancel, and Add task/Save changes actions. Title validation uses the shared frontend Zod schema.
 - Feature 07/09 verification: frontend lint and TypeScript checks pass, and the running development server returns `200` for `/inbox`.
+- Feature 03: Added `frontend/proxy.ts` using the Next.js 16 Proxy convention. `/inbox`, `/today`, and `/calendar` redirect unauthenticated requests to `/login`; authenticated requests to `/login` and `/signup` redirect to `/inbox`.
+- Feature 11: Added backend JWT cookie middleware, `GET /api/auth/me`, and `POST /api/auth/logout`. Invalid tokens are rejected with `401`, and logout clears the HTTP-only cookie.
+- Feature 14: Added current-user restoration and logout mutations through TanStack Query. The protected auth boundary recovers stale sessions by clearing the cookie and returning the user to `/login`.
+- Feature 06: Sidebar now displays the authenticated user's name/initial and includes a working Logout button with pending state.
+- Auth verification: guest `/inbox` returned `307` to `/login`; signup returned `201`; `/auth/me` returned `200`; authenticated `/inbox` returned `200`; authenticated `/login` returned `307` to `/inbox`; logout returned `200`, removed the cookie, and `/inbox` again returned `307` to `/login`.
+- Auth checks: backend typecheck/build and frontend lint/typecheck pass. Frontend production build remains blocked by the existing `.next/trace` lock.
 
 ---
 

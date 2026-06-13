@@ -65,3 +65,22 @@ export async function loginUser(input: LoginInput): Promise<AuthUser> {
 
   return authUser;
 }
+
+export async function getCurrentUser(userId: string): Promise<AuthUser> {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+
+  if (!user) {
+    throw new AppError("Authentication required", 401);
+  }
+
+  return user;
+}

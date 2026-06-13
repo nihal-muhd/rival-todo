@@ -1,9 +1,14 @@
 "use client";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
-import { loginUser, signupUser } from "@/lib/auth";
+import {
+  getCurrentUser,
+  loginUser,
+  logoutUser,
+  signupUser,
+} from "@/lib/auth";
 
 export const authKeys = {
   all: ["auth"] as const,
@@ -32,6 +37,28 @@ export function useLogin() {
     onSuccess: ({ user }) => {
       queryClient.setQueryData(authKeys.currentUser, user);
       router.push("/inbox");
+    },
+  });
+}
+
+export function useCurrentUser() {
+  return useQuery({
+    queryKey: authKeys.currentUser,
+    queryFn: getCurrentUser,
+    retry: false,
+  });
+}
+
+export function useLogout() {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: logoutUser,
+    onSettled: () => {
+      queryClient.removeQueries({ queryKey: authKeys.all });
+      router.replace("/login");
+      router.refresh();
     },
   });
 }

@@ -21,6 +21,7 @@ import {
 } from "@hugeicons/core-free-icons";
 
 import { useTaskWorkspace } from "@/components/tasks/TaskWorkspace";
+import { useCurrentUser, useLogout } from "@/hooks/useAuth";
 
 type NavigationItem = {
   label: string;
@@ -48,19 +49,23 @@ const projects = [
 function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
   const { openCreateTask } = useTaskWorkspace();
+  const currentUserQuery = useCurrentUser();
+  const logoutMutation = useLogout();
+  // const userName = currentUserQuery.data?.user.name ?? "Account";
+  // const userInitial = userName.charAt(0).toUpperCase();
 
   return (
     <div className="flex h-full flex-col bg-[color-mix(in_oklab,var(--color-primary)_4%,white)] px-4 py-5 text-foreground">
       <div className="flex items-center gap-3 px-2">
-        <div className="grid size-10 shrink-0 place-items-center rounded-full bg-primary text-sm font-semibold text-primary-foreground shadow-card">
-          N
-        </div>
+        {/* <div className="grid size-10 shrink-0 place-items-center rounded-full bg-primary text-sm font-semibold text-primary-foreground shadow-card">
+          {userInitial}
+        </div> */}
         <button
           type="button"
           className="flex min-w-0 flex-1 items-center gap-2 rounded-lg py-2 text-left hover:text-primary"
           aria-label="Open user menu"
         >
-          <span className="truncate text-base font-semibold">Nihal</span>
+          {/* <span className="truncate text-base font-semibold">{userName}</span> */}
           <HugeiconsIcon icon={ArrowDown01Icon} size={18} strokeWidth={1.8} />
         </button>
         <button
@@ -68,7 +73,11 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
           className="grid size-9 place-items-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground"
           aria-label="Notifications"
         >
-          <HugeiconsIcon icon={Notification02Icon} size={22} strokeWidth={1.7} />
+          <HugeiconsIcon
+            icon={Notification02Icon}
+            size={22}
+            strokeWidth={1.7}
+          />
         </button>
         <button
           type="button"
@@ -100,7 +109,11 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
               />
               <span className="flex-1 text-left">{item.label}</span>
               {item.count !== undefined ? (
-                <span className={isActive ? "text-primary" : "text-muted-foreground"}>
+                <span
+                  className={
+                    isActive ? "text-primary" : "text-muted-foreground"
+                  }
+                >
                   {item.count}
                 </span>
               ) : null}
@@ -142,7 +155,10 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
 
       <section className="mt-8" aria-labelledby="projects-heading">
         <div className="flex items-center justify-between px-3">
-          <h2 id="projects-heading" className="text-sm font-semibold text-muted-foreground">
+          <h2
+            id="projects-heading"
+            className="text-sm font-semibold text-muted-foreground"
+          >
             My Projects
           </h2>
           <button
@@ -174,6 +190,14 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
       </section>
 
       <div className="mt-auto space-y-1 pt-8">
+        <button
+          type="button"
+          disabled={logoutMutation.isPending}
+          onClick={() => logoutMutation.mutate()}
+          className="flex h-10 w-full items-center rounded-lg px-3 text-sm font-medium text-destructive hover:bg-muted disabled:opacity-60"
+        >
+          <span>{logoutMutation.isPending ? "Logging out..." : "Logout"}</span>
+        </button>
         <button
           type="button"
           className="flex h-10 w-full items-center gap-3 rounded-lg px-3 text-sm font-medium hover:bg-muted"
